@@ -9,13 +9,12 @@ A set of functions that analyze audio on Teensy microcontrollers and display it 
     - [Arduino IDE with Teensyduino](#arduino-ide-with-teensyduino)
     - [Teensy 4.1 microcontroller](#teensy-41-microcontroller)
     - [Teensy Audio Library](#teensy-audio-library)
-    - [WS2812Serial](#ws2812serial)
-    - [FastLED](#fastled)
+    - [[WS2812Serial]](#ws2812serial)
+    - [[FastLED]](#fastled)
     - [WS2812B Addressable RGB LED strips](#ws2812b-addressable-rgb-led-strips)
   - [Features](#features)
     - [To do:](#to-do)
   - [Resources](#resources)
-  - [Inspiration](#inspiration)
   - [About me](#about-me)
   - [Contact](#contact)
 ## General Info
@@ -24,19 +23,19 @@ While all-in-one LED controllers have a lot of cool effects built in, I have fou
 I want LEDaudio to be a collection of functions to interact with LED strips, with linear functions that can be used simultaneously on either the same, or different part of the strips.
 
 ## Technologies
-### Arduino IDE with Teensyduino
+### [Arduino IDE with Teensyduino][Teensyduino]
   - The most straightforward way to program Teensy microcontrollers
-### Teensy 4.1 microcontroller
+### [Teensy 4.1 microcontroller][Teensy 4.1]
   - Really fast microntroller made by PJRC, with an absurd number of ports and examples to base code off of.
-### Teensy Audio Library
+### [Teensy Audio Library][Teensy Audio Wiki]
   - A fast and lightweight library made by the folks over at PJRC (who also designed Teensy)
   - Has support for easy audio analysis, especially the 1024 point Fast Fourier transform, which I use to get the audio spectrum.
-### WS2812Serial
+### [WS2812Serial]
   - Another beauteous library by PJRC that allows for non-blocking control of LEDs, letting the audio library and LEDs run at the same time without breaking each other.
-### FastLED
+### [FastLED]
   - LED control library used in conjunction with WS2812BSerial
   - Has a lot of built-in functions that reduce the amount of necessary code.
-### WS2812B Addressable RGB LED strips
+### [WS2812B Addressable RGB LED strips][WS2812B]
   - Run on 5V, and are some of the most commonly used LED strips
   - Requires a single pin to control the entire length.
 
@@ -49,13 +48,12 @@ I want LEDaudio to be a collection of functions to interact with LED strips, wit
   - Led goes wump when the beat goes wump
 - Adjustable global brightess with potentiometer
 - Wifi control over ethernet connection
-- One to multiple wireless LED control via serial connection to 
+- One to multiple wireless LED control via serial connection to ESP8266
+- Automatic parameter adjustment based on volume of song.
 ## Resources
- - [Teensy audio wiki]
- - [PJRC Audio design tool][Audio design tool]
+ - [Teensy audio wiki][Teensy Audio Wiki]
+ - [PJRC Audio design tool][Audio Design Tool]
  - [Wiring tips][Adafruit Wiring]
-## Inspiration
- - Todo
 ## About me
 Welcome to the bottom of the page! You made it! My name is Joseph Ntaimo, and I'm a sophomore at MIT studying mechanical engineering and computer science. My primary interests include music technology (e.g.sound reactive LEDs) and hacking stuff together with microcontrollers. Additionaly, I DJ for my hall at MIT (Woah PUTZ!), and will definitely be using these functions when the hype train returns after Corona.
 ## Contact
@@ -63,6 +61,11 @@ Check out more about me and my projects at jntaimo.com.
 
 Do you want to get in touch? Shoot me an email at jntaimo@mit.edu
 
-[Teensy audio wiki]:(https://www.pjrc.com/teensy/td_libs_Audio.html)
-[Audio design tool]:(https://www.pjrc.com/teensy/gui/index.html)
+[Teensy Audio Wiki]:(https://www.pjrc.com/teensy/td_libs_Audio.html)
+[Audio Design Tool]:(https://www.pjrc.com/teensy/gui/index.html)
 [Adafruit Wiring]:https://learn.adafruit.com/adafruit-neopixel-uberguide/basic-connections
+[Teensyduino]:(https://www.pjrc.com/teensy/teensyduino.html)
+[Teensy 4.1]:(https://www.pjrc.com/store/teensy41.html)
+[WS2812Serial]:(https://www.pjrc.com/non-blocking-ws2812-led-library/)
+[FastLED]:(https://github.com/FastLED/FastLED)
+[WS2812B]:(https://microcontrollerslab.com/ws2812b-rgb-led-pinout-working-interfacing-arduino-applications/)
