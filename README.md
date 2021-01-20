@@ -14,7 +14,6 @@ A set of functions that analyze audio on Teensy microcontrollers and display it 
     - [WS2812B Addressable RGB LED strips](#ws2812b-addressable-rgb-led-strips)
   - [Features](#features)
     - [To do:](#to-do)
-  - [Resources](#resources)
   - [About me](#about-me)
   - [Contact](#contact)
 ## General Info
@@ -50,10 +49,6 @@ I want LEDaudio to be a collection of functions to interact with LED strips, wit
 - Wifi control over ethernet connection
 - One to multiple wireless LED control via serial connection to ESP8266
 - Automatic parameter adjustment based on volume of song.
-## Resources
- - [Teensy audio wiki][Teensy Audio Wiki]
- - [PJRC Audio design tool][Audio Design Tool]
- - [Wiring tips][Adafruit Wiring]
 ## About me
 Welcome to the bottom of the page! You made it! My name is Joseph Ntaimo, and I'm a sophomore at MIT studying mechanical engineering and computer science. My primary interests include music technology (e.g.sound reactive LEDs) and hacking stuff together with microcontrollers. Additionaly, I DJ for my hall at MIT (Woah PUTZ!), and will definitely be using these functions when the hype train returns after Corona.
 ## Contact
