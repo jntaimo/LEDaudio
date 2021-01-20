@@ -14,12 +14,14 @@ A set of functions that analyze audio on Teensy microcontrollers and display it 
     - [WS2812B Addressable RGB LED strips](#ws2812b-addressable-rgb-led-strips)
   - [Features](#features)
     - [To do:](#to-do)
-  - [Sources](#sources)
+  - [Resources](#resources)
   - [Inspiration](#inspiration)
   - [About me](#about-me)
   - [Contact](#contact)
 ## General Info
 While all-in-one LED controllers have a lot of cool effects built in, I have found the sound-responsive ones to be something of a disappointment. The algorithms they use seem *super* basic, and ultimately fail to represent the **vibe** of the music, which is what I am always looking for. LEDaudio attempts to fix that by combining the excellent Teensy audio library with scalable functions that visualize music in cool ways!
+
+I want LEDaudio to be a collection of functions to interact with LED strips, with linear functions that can be used simultaneously on either the same, or different part of the strips.
 
 ## Technologies
 ### Arduino IDE with Teensyduino
@@ -48,8 +50,10 @@ While all-in-one LED controllers have a lot of cool effects built in, I have fou
 - Adjustable global brightess with potentiometer
 - Wifi control over ethernet connection
 - One to multiple wireless LED control via serial connection to 
-## Sources
- - Todo
+## Resources
+ - [Teensy audio wiki]
+ - [PJRC Audio design tool][Audio design tool]
+ - [Wiring tips][Adafruit Wiring]
 ## Inspiration
  - Todo
 ## About me
@@ -58,3 +62,7 @@ Welcome to the bottom of the page! You made it! My name is Joseph Ntaimo, and I'
 Check out more about me and my projects at jntaimo.com.
 
 Do you want to get in touch? Shoot me an email at jntaimo@mit.edu
+
+[Teensy audio wiki]:(https://www.pjrc.com/teensy/td_libs_Audio.html)
+[Audio design tool]:(https://www.pjrc.com/teensy/gui/index.html)
+[Adafruit Wiring]:https://learn.adafruit.com/adafruit-neopixel-uberguide/basic-connections
