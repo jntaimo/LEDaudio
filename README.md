@@ -9,8 +9,8 @@ A set of functions that analyze audio on Teensy microcontrollers and display it 
     - [Arduino IDE with Teensyduino](#arduino-ide-with-teensyduino)
     - [Teensy 4.1 microcontroller](#teensy-41-microcontroller)
     - [Teensy Audio Library](#teensy-audio-library)
-    - [[WS2812Serial]](#ws2812serial)
-    - [[FastLED]](#fastled)
+    - [WS2812Serial](#ws2812serial)
+    - [FastLED](#fastled)
     - [WS2812B Addressable RGB LED strips](#ws2812b-addressable-rgb-led-strips)
   - [Features](#features)
     - [To do:](#to-do)
@@ -23,21 +23,21 @@ While all-in-one LED controllers have a lot of cool effects built in, I have fou
 I want LEDaudio to be a collection of functions to interact with LED strips, with linear functions that can be used simultaneously on either the same, or different part of the strips.
 
 ## Technologies
-### [Arduino IDE with Teensyduino][Teensyduino]
-  - The most straightforward way to program Teensy microcontrollers
-### [Teensy 4.1 microcontroller][Teensy 4.1]
-  - Really fast microntroller made by PJRC, with an absurd number of ports and examples to base code off of.
-### [Teensy Audio Library][Teensy Audio Wiki]
+### Arduino IDE with Teensyduino
+  - The most straightforward way to program Teensy microcontrollers [here][Teensyduino]
+### Teensy 4.1 microcontroller
+  - Really fast microntroller made by PJRC, with an absurd number of ports and examples to base code off of [here][Teensy 4.1].
+### Teensy Audio Library
   - A fast and lightweight library made by the folks over at PJRC (who also designed Teensy)
-  - Has support for easy audio analysis, especially the 1024 point Fast Fourier transform, which I use to get the audio spectrum.
-### [WS2812Serial]
-  - Another beauteous library by PJRC that allows for non-blocking control of LEDs, letting the audio library and LEDs run at the same time without breaking each other.
-### [FastLED]
+  - Has support for easy audio analysis, especially the 1024 point Fast Fourier transform, which I use to get the audio spectrum [here][Teensy Audio Wiki]
+### WS2812Serial
+  - Another beauteous library by PJRC that allows for non-blocking control of LEDs, letting the audio library and LEDs run at the same time without breaking each other [here][WS2812Serial]
+### FastLED
   - LED control library used in conjunction with WS2812BSerial
-  - Has a lot of built-in functions that reduce the amount of necessary code.
-### [WS2812B Addressable RGB LED strips][WS2812B]
+  - Has a lot of built-in functions that reduce the amount of necessary code [here][FastLED].
+### WS2812B Addressable RGB LED strips
   - Run on 5V, and are some of the most commonly used LED strips
-  - Requires a single pin to control the entire length.
+  - Requires a single pin to control the entire length [here][WS2812B].
 
 ## Features
  - Basic 16 pixel spectrum analyzer display over USB audio
