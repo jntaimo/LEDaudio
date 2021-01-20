@@ -52,15 +52,15 @@ I want LEDaudio to be a collection of functions to interact with LED strips, wit
 ## About me
 Welcome to the bottom of the page! You made it! My name is Joseph Ntaimo, and I'm a sophomore at MIT studying mechanical engineering and computer science. My primary interests include music technology (e.g.sound reactive LEDs) and hacking stuff together with microcontrollers. Additionaly, I DJ for my hall at MIT (Woah PUTZ!), and will definitely be using these functions when the hype train returns after Corona.
 ## Contact
-Check out more about me and my projects at jntaimo.com.
+Check out more about me and my projects at [jntaimo.com](https://jntaimo.com).
 
 Do you want to get in touch? Shoot me an email at jntaimo@mit.edu
 
-[Teensy Audio Wiki]:(https://www.pjrc.com/teensy/td_libs_Audio.html)
-[Audio Design Tool]:(https://www.pjrc.com/teensy/gui/index.html)
+[Teensy Audio Wiki]:https://www.pjrc.com/teensy/td_libs_Audio.html
+[Audio Design Tool]:https://www.pjrc.com/teensy/gui/index.html
 [Adafruit Wiring]:https://learn.adafruit.com/adafruit-neopixel-uberguide/basic-connections
-[Teensyduino]:(https://www.pjrc.com/teensy/teensyduino.html)
-[Teensy 4.1]:(https://www.pjrc.com/store/teensy41.html)
-[WS2812Serial]:(https://www.pjrc.com/non-blocking-ws2812-led-library/)
-[FastLED]:(https://github.com/FastLED/FastLED)
-[WS2812B]:(https://microcontrollerslab.com/ws2812b-rgb-led-pinout-working-interfacing-arduino-applications/)
+[Teensyduino]:https://www.pjrc.com/teensy/teensyduino.html
+[Teensy 4.1]:https://www.pjrc.com/store/teensy41.html
+[WS2812Serial]:https://www.pjrc.com/non-blocking-ws2812-led-library/
+[FastLED]:https://github.com/FastLED/FastLED
+[WS2812B]:https://microcontrollerslab.com/ws2812b-rgb-led-pinout-working-interfacing-arduino-applications/
