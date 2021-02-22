@@ -86,7 +86,6 @@ void loop() {
 //    Serial.println();
 //  }
 
-
   if (fft1024_1.available()) {
     // each time new FFT data is available
     // print to the Arduino Serial Monitor
