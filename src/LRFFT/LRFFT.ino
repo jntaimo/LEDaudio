@@ -12,13 +12,15 @@ CRGB leds[NUM_LEDS];
 #define NUM_POTS 6
 #define BUTTON_1_PIN 1
 #define NUM_BUTTONS 4
+#define HWSERIAL Serial8
+#define NUM_DISPLAY_MODES 2
 //int potPins[NUM_POTS] = {38, 18, 19, 22};
 int analogReadings[NUM_POTS];
 int digitalReadings[NUM_BUTTONS];
 Bounce2::Button buttons[NUM_BUTTONS];
 unsigned long previousSensorRead = 0;
-unsigned long sensorReadInterval = 100;
-
+unsigned long sensorReadInterval = 20;
+bool buttonUpdate = false;
 #include <Audio.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -51,23 +53,26 @@ AudioConnection          patchCord9(mixer1, rmsLR);
 //Start and stop indices of FFT bins
 //this is 256 sample fft so there are 256/2 = 128 usable bins
 //This range from startBin[i] to stopBin[i] is mapped to led[i]
+//cqt - replacement
 const int startBins[12] = {0, 1, 2, 3, 5,  8, 12, 18, 26, 36, 56, 81};
 const int stopBins[12] =  {0, 1, 2, 4, 7, 11, 17, 25, 35, 55, 80, 127};
 
 unsigned long previousPotMillis = 0;
 const long potInterval = 200;
 unsigned long previousDisplayMillis = 0;
-const long displayInterval = 30;
+long displayInterval = 30;
 void printNumber(float n);
+int displayMode = 0;
+
 void setup() {
   FastLED.addLeds<WS2812SERIAL, PIN, GRB>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
   FastLED.setBrightness(50);
+//  HWSERIAL.begin(115200);
   Serial.begin(115200);
   Serial.println("Initializing...");
   analogReadResolution(8);
   AudioMemory(15);
-  fft256_L.averageTogether(5);
-  fft256_R.averageTogether(5);
+
   //clears out the leds before beginning
   for (int i=0; i<NUM_LEDS; ++i){
     leds[i].r = leds[i].g = leds[i].b = 0;
@@ -86,12 +91,14 @@ void setup() {
 }
 
 void setPixel(int Pixel, float brightness){
+    if (displayMode == 0){
     int val = int(brightness*2560)%256;
     leds[Pixel].r = val;
     leds[Pixel].g = val;
     leds[Pixel].b = val;
-//      leds[Pixel].setHue((int(brightness*3000) + 2*abs(128-((millis()%10000)*256/10000)%256) + 2*abs(Pixel-12))%256);
-
+    } else if (displayMode ==1){
+      leds[Pixel].setHue((int(brightness*3000) + 2*abs(128-((millis()%10000)*256/10000)%256) + 2*abs(Pixel-12))%256);
+    }
 }
 
 //Reads a series of potentiometer values and stores them in analogReadings
@@ -100,6 +107,7 @@ void readPots() {
     analogReadings[i] = analogRead(POT_1_PIN + i);
   }
 }
+
 void printSensors(){
   
     for (int i = 0; i < NUM_POTS; i++){
@@ -118,8 +126,9 @@ void printSensors(){
     }
     Serial.println();
 }
-void loop() {
-  bool buttonUpdate = false;
+
+void updateButtons(){
+   buttonUpdate = false;
   for (int i = 0; i < NUM_BUTTONS; i++){
     buttons[i].update();
     if (buttons[i].pressed()){
@@ -133,22 +142,27 @@ void loop() {
     readPots();
     printSensors();
     previousSensorRead = millis();
+  }    
+  updateDisplayModes(0,1);
+}
+
+void updatePots(bool printOutput = false){
+  if (millis() - previousSensorRead > sensorReadInterval){
+    previousSensorRead = millis();
+    readPots();
+    if (printOutput) printSensors();
   }  
-//  if (millis() - previousSensorRead > sensorReadInterval){
-//    previousSensorRead = millis();
-//    readPots();
-//    //printSensors();
-//    sensorReadInterval = 20;//analogReadings[0];
-//  }
-  // put your main code here, to run repeatedly:
-  //
+}
+
+void updateBrightness(){
   if (millis() - previousPotMillis >= potInterval){
     previousPotMillis = millis();
     FastLED.setBrightness(analogRead(POT_PIN)*MAX_BRIGHTNESS/255);
-  }
-  if (millis() - previousDisplayMillis > displayInterval){
-    readPots();
-    printSensors();
+  }  
+}
+
+void updateFFT(bool printOutput = false){
+ if (millis() - previousDisplayMillis > displayInterval){
     previousDisplayMillis = millis();
     if (fft256_L.available() || fft256_R.available()) {
         // each time new FFT data is available
@@ -161,12 +175,15 @@ void loop() {
         }
         
         //16 sections total
-//        Serial.print("FFTL: ");
-//        for (int i=0; i<30; i++) {  // 0-25  -->  DC to 1.25 kHz
-//          float n = fft256_L.read(i);
-//          printNumber(n);
-//        }
-//        Serial.println();
+        if (printOutput){
+          Serial.print("FFTL: ");
+          for (int i=0; i<30; i++) {  // 0-25  -->  DC to 1.25 kHz
+            float n = fft256_L.read(i);
+            printNumber(n);
+          } 
+          Serial.println();         
+        }
+
         FastLED.show();
       }   
     }
@@ -179,4 +196,31 @@ void printNumber(float n) {
   } else {
     Serial.print("   -  "); // don't print "0.00"
   }
+}
+
+void updateDisplayInterval(int potNum){
+  displayInterval = analogReadings[potNum];
+}
+void updateNumFFT(int potNum){
+  fft256_L.averageTogether(potNum/10);
+  fft256_R.averageTogether(potNum/10);  
+}
+
+void updateDisplayModes(int button1, int button2){
+  if (digitalReadings[button1] && (displayMode > 0 )){
+      displayMode--;
+  } else if (digitalReadings[button2]){
+      displayMode++;
+  }
+  displayMode %= NUM_DISPLAY_MODES;
+}
+
+void loop() {
+    updateButtons();
+    updatePots(true);
+    updateBrightness();
+    updateFFT();
+    updateDisplayInterval(0);
+    updateNumFFT(1);
+    
 }
