@@ -13,13 +13,16 @@ CRGB leds[NUM_LEDS];
 #define BUTTON_1_PIN 1
 #define NUM_BUTTONS 4
 #define HWSERIAL Serial8
-#define NUM_DISPLAY_MODES 2
-//int potPins[NUM_POTS] = {38, 18, 19, 22};
+#define NUM_DISPLAY_MODES 5
 int analogReadings[NUM_POTS];
 int digitalReadings[NUM_BUTTONS];
+float FFTValues[NUM_LEDS];
+int LEDOffset = 0;
 Bounce2::Button buttons[NUM_BUTTONS];
 unsigned long previousSensorRead = 0;
 unsigned long sensorReadInterval = 20;
+unsigned long previousParameterRead = 0;
+unsigned long parameterReadInterval = 20;
 bool buttonUpdate = false;
 #include <Audio.h>
 #include <Wire.h>
@@ -67,12 +70,10 @@ int displayMode = 0;
 void setup() {
   FastLED.addLeds<WS2812SERIAL, PIN, GRB>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
   FastLED.setBrightness(50);
-//  HWSERIAL.begin(115200);
   Serial.begin(115200);
   Serial.println("Initializing...");
   analogReadResolution(8);
   AudioMemory(15);
-
   //clears out the leds before beginning
   for (int i=0; i<NUM_LEDS; ++i){
     leds[i].r = leds[i].g = leds[i].b = 0;
@@ -87,20 +88,69 @@ void setup() {
   for (int i = 0; i < NUM_POTS; i++)
     pinMode(POT_1_PIN+i, INPUT);
   FastLED.show();
-  delay(1000);
+  delay(500);
 }
 
-void setPixel(int Pixel, float brightness){
-    if (displayMode == 0){
-    int val = int(brightness*2560)%256;
-    leds[Pixel].r = val;
-    leds[Pixel].g = val;
-    leds[Pixel].b = val;
-    } else if (displayMode ==1){
-      leds[Pixel].setHue((int(brightness*3000) + 2*abs(128-((millis()%10000)*256/10000)%256) + 2*abs(Pixel-12))%256);
-    }
-}
 
+uint8_t baseHue = 0;
+uint8_t maxHue = 50;
+uint8_t hueRange = maxHue - baseHue;
+float maxFFT = 0.05;
+
+float maxRMS = 0.5;
+int sinRate = 150;
+void updatePixels(){
+  switch (displayMode){
+    
+    case 0://basic white fft setup
+      for (int i = 0; i < 24; i++){
+        int whiteVal = int(FFTValues[i]*2560)%256;
+        leds[i].r = whiteVal;
+        leds[i].g = whiteVal;
+        leds[i].b = whiteVal;
+      }  
+      break;
+    case 1: //maps to colors instead of brightness
+      for (int i = 0; i < 24; i++){
+        leds[(i+LEDOffset)%NUM_LEDS].setHue(abs(map(FFTValues[i],0,maxFFT,baseHue,maxHue)));
+      }
+      break;
+    case 2:
+      float LRMS = constrain(rmsL.read()*map(analogReadings[2], 0, 255, 0, 100), 0, 12);
+      float RRMS = constrain(rmsR.read()*map(analogReadings[2], 0, 255, 0, 100), 0 ,12);
+      // Serial.print("L ");
+      // Serial.print(FFTValues[0]);
+      // Serial.print(" R ");
+      // Serial.println(FFTValues[NUM_LEDS-1]);
+      for (int i = 0; i < NUM_LEDS; i++){
+        leds[i].subtractFromRGB(10);
+      }
+      for (int i = 0; i < LRMS; i++){
+        leds[i].setHue(constrain(i*NUM_LEDS+(int)LRMS, 0, 255));
+      }
+      for (int i = 0; i < RRMS; i++){
+        leds[12+ (11-i)].setHue(constrain(i*NUM_LEDS+(int)RRMS, 0, 255));
+      }
+      break;
+    case 3:
+      break;
+    case 4:
+      break;
+    case 5:
+      break;
+    case 6:
+      break;
+  }
+  if (displayMode == 3){
+    Serial.println(sin((float)millis()/sinRate));
+  } else if (displayMode == 4){
+
+  }
+}
+//maps values from the input to the output range, but with float computations instead of integer operations.
+long floatMap(float x, float in_min, float in_max, float out_min, float out_max) {
+  return (float)(x - in_min) * (float)(out_max - out_min) / (float)(in_max - in_min) + out_min;
+}
 //Reads a series of potentiometer values and stores them in analogReadings
 void readPots() {
   for (int i = 0; i < NUM_POTS; i++){
@@ -127,7 +177,7 @@ void printSensors(){
     Serial.println();
 }
 
-void updateButtons(){
+void updateButtons(bool printOutput = false){
    buttonUpdate = false;
   for (int i = 0; i < NUM_BUTTONS; i++){
     buttons[i].update();
@@ -140,7 +190,7 @@ void updateButtons(){
   }
   if (buttonUpdate) {
     readPots();
-    printSensors();
+    if (printOutput) printSensors();
     previousSensorRead = millis();
   }    
   updateDisplayModes(0,1);
@@ -170,19 +220,10 @@ void updateFFT(bool printOutput = false){
         
         for (int i = 0; i < 12; i++){
             //left side
-            setPixel(i, fft256_L.read(startBins[i], stopBins[i]));
-            setPixel(12 + (11 - i), fft256_R.read(startBins[i], stopBins[i]));
+            FFTValues[i] = fft256_L.read(startBins[i], stopBins[i]);
+            FFTValues[12 + (11 - i)] = fft256_R.read(startBins[i], stopBins[i]);            
         }
-        
-        //16 sections total
-        if (printOutput){
-          Serial.print("FFTL: ");
-          for (int i=0; i<30; i++) {  // 0-25  -->  DC to 1.25 kHz
-            float n = fft256_L.read(i);
-            printNumber(n);
-          } 
-          Serial.println();         
-        }
+        updatePixels();
 
         FastLED.show();
       }   
@@ -205,7 +246,15 @@ void updateNumFFT(int potNum){
   fft256_L.averageTogether(potNum/10);
   fft256_R.averageTogether(potNum/10);  
 }
-
+void updateMaxHue(int potNum){
+  maxHue = analogReadings[potNum];
+}
+void updateLEDOffset(int potNum){
+  LEDOffset = map(analogReadings[potNum], 0, 255, 0,23);
+}
+void updateSineRate(int potNum){
+  sinRate = analogReadings[potNum];
+}
 void updateDisplayModes(int button1, int button2){
   if (digitalReadings[button1] && (displayMode > 0 )){
       displayMode--;
@@ -215,12 +264,19 @@ void updateDisplayModes(int button1, int button2){
   displayMode %= NUM_DISPLAY_MODES;
 }
 
+
 void loop() {
     updateButtons();
-    updatePots(true);
+    updatePots(false);
     updateBrightness();
     updateFFT();
-    updateDisplayInterval(0);
-    updateNumFFT(1);
-    
+    if (millis() - previousParameterRead > parameterReadInterval){
+      updateDisplayInterval(0);
+      updateNumFFT(1);
+      updateMaxHue(2);
+      updateLEDOffset(3);
+      updateSineRate(4);      
+      previousParameterRead = millis();
+    }
+
 }
