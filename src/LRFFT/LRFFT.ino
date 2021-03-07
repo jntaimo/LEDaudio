@@ -116,8 +116,8 @@ void updatePixels(){
       }
       break;
     case 2:
-      float LRMS = constrain(rmsL.read()*map(analogReadings[2], 0, 255, 0, 100), 0, 12);
-      float RRMS = constrain(rmsR.read()*map(analogReadings[2], 0, 255, 0, 100), 0 ,12);
+      float LRMS = constrain(rmsL.read()*map(analogReadings[5], 0, 255, 0, 100), 0, 12);
+      float RRMS = constrain(rmsR.read()*map(analogReadings[5], 0, 255, 0, 100), 0 ,12);
       // Serial.print("L ");
       // Serial.print(FFTValues[0]);
       // Serial.print(" R ");
@@ -142,7 +142,12 @@ void updatePixels(){
       break;
   }
   if (displayMode == 3){
-    Serial.println(sin((float)millis()/sinRate));
+    int waveVal = constrain(255*sin((float)millis()/abs(sinRate+100))/2+255/2,0,255);
+    for (int i = 0; i < NUM_LEDS; i++){
+      leds[i].setHue((waveVal+2*i)%255);
+      leds[i].subtractFromRGB(constrain(FFTValues[i]*500, 0, 255));
+    }
+    //Serial.println(waveVal);
   } else if (displayMode == 4){
 
   }
@@ -267,7 +272,7 @@ void updateDisplayModes(int button1, int button2){
 
 void loop() {
     updateButtons();
-    updatePots(false);
+    updatePots(true);
     updateBrightness();
     updateFFT();
     if (millis() - previousParameterRead > parameterReadInterval){
