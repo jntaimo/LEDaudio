@@ -50,7 +50,7 @@ I want LEDaudio to be a collection of functions to interact with LED strips, wit
 - One to multiple wireless LED control via serial connection to ESP8266
 - Automatic parameter adjustment based on volume of song.
 ## About me
-Welcome to the bottom of the page! You made it! My name is Joseph Ntaimo, and I'm a sophomore at MIT studying mechanical engineering and computer science. My primary interests include music technology (e.g.sound reactive LEDs) and hacking stuff together with microcontrollers. Additionaly, I DJ for my hall at MIT (Woah PUTZ!), and will definitely be using these functions when the hype train returns after Corona.
+Welcome to the bottom of the page! You made it! My name is Joseph Ntaimo, and I'm a Junior at MIT studying mechanical engineering and musical robotics. My primary interests include music technology (e.g.sound reactive LEDs) and hacking stuff together with microcontrollers. Additionaly, I DJ for my hall at MIT (Woah PUTZ!).
 ## Contact
 Check out more about me and my projects at [jntaimo.com](https://jntaimo.com).
 
